@@ -1,0 +1,60 @@
+body {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.home-main-content {
+    background-color: #eee;
+    height: 100vh;
+}
+
+.auth-container {
+    max-width: 450px;
+    margin-top: 120px
+}
+
+.auth-form-title {
+    text-align: center
+}
+
+.auth-buttons {
+    justify-content: space-between
+}
+
+.chat-contact-name {
+    font-size: 17px;
+    font-weight: 500
+}
+
+.chat-contact-username {
+    color: gray
+}
+
+.chat-message-text {
+    font-size: 16px
+}
+
+.message-list {
+    height: calc(100vh - 205px);
+    overflow: scroll
+}
+
+.dialog {
+    width: 450px;
+    max-width: 90%
+}
+
+#detail {
+    padding: 0;
+}
+
+#contact-detail-avatar {
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+}
+
+
+#contact-detail-avatar>svg {
+    font-size: 50px;
+}

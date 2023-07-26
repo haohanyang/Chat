@@ -1,0 +1,18 @@
+query GetSpace($id: Int!) {
+  space(id: $id) {
+    id
+    name
+    description
+    updated
+    memberships {
+        id
+        member {
+            id
+            userName
+            firstName
+            lastName
+            avatar
+        }
+    }
+  }
+}

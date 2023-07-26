@@ -1,0 +1,23 @@
+<div class="d-flex mud-list-item-text">
+    <Avatar AvatarUrl="@Data.Author.Avatar" />
+    <div class="ml-3">
+        <span class="chat-contact-name">@Data.Author.Name</span>
+        <span class="chat-contact-username">@@@Data.Author.UserName</span>
+        @if (Data.AttachmentUri != null)
+        {
+            <p>
+                <MudImage Class="rounded-lg" Src="@Data.AttachmentUri" Alt="Image" Style="width: 450px;max-width: 90%" />
+            </p>
+        }
+        else
+        {
+            <p class="chat-message-text">@Data.Content</p>
+        }
+        <p class="chat-message-date">@Data.TimeStamp</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public MessageDto Data { get; set; } = null!;
+}

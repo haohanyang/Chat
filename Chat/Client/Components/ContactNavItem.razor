@@ -1,0 +1,28 @@
+<div class="mud-nav-item mud-ripple">
+    @{
+        var className = "mud-nav-link " + (DrawerOpen ? "pl-4 pr-2" : "pl-2");
+        var link = Data.Type == ChatType.Direct ? "/chat/dm/" + Data.Id : "/chat/space/" + Data.Id;
+        var avatar = Data.Type == ChatType.Direct ? Data.Image : "space";
+    }
+    <NavLink class="@className" href="@link">
+        <Avatar AvatarUrl="@avatar" MessageCount="@Data.UnreadMessageCount" ShowBadge="@(!DrawerOpen)" />
+        @if (DrawerOpen)
+        {
+            <div class="mud-nav-link-text">
+                <p class="nav-contact-name">@Data.Name</p>
+            </div>
+            @if (Data.UnreadMessageCount > 0)
+            {
+                <MudChip Class="ml-auto" Color="Color.Error" Size="Size.Small">@Data.UnreadMessageCount</MudChip>
+            }
+        }
+    </NavLink>
+</div>
+
+@code {
+    [Parameter]
+    public bool DrawerOpen { get; set; }
+
+    [Parameter]
+    public Contact Data { get; set; } = null!;
+}

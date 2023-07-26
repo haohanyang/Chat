@@ -1,0 +1,16 @@
+mutation AddSpace($name: String!, $description: String!, $members: [String!]!) {
+    addSpace(input: {
+        request: {
+            name: $name,
+            description: $description,
+            members: $members
+        }
+    }) {
+        space {
+            id
+            name
+            description
+            updated
+        }
+    }
+}

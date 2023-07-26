@@ -1,0 +1,33 @@
+﻿@using Chat.Client.Components
+@inject IConfiguration Configuration
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(DefaultLayout)">
+                <NotAuthorized>
+                    <MudAlert Severity="Severity.Error">
+                        @{
+                            var link = Configuration.GetValue<bool>("Mock") ? "signin" : "authentication/login";
+                        }
+                        <MudText>You're not authorized to access this resource. <MudLink Href="@link">Log in</MudLink>
+                        </MudText>
+                    </MudAlert>
+                </NotAuthorized>
+                <Authorizing>
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(DefaultLayout)">
+                <MudAlert Severity="Severity.Error">
+                    <MudText>Sorry, there's nothing at this address. <MudLink Href="/">Go home</MudLink>
+                    </MudText>
+                </MudAlert>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

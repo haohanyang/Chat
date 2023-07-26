@@ -1,0 +1,19 @@
+<div class="mud-list-item mud-list-item-gutters mud-list-item-clickable mud-ripple"
+@onclick="() => OnAdd.InvokeAsync(Friend.Id)">
+    <div class="mud-list-item-icon">
+        <Avatar AvatarUrl="@Friend.Avatar" />
+    </div>
+    <div class="mud-list-item-text">
+        <p>@Friend.Name</p>
+        <p>@@@Friend.UserName</p>
+    </div>
+    <MudIcon Class="ml-auto" Icon="@Icons.Material.Filled.Send" Title="Add" />
+</div>
+
+@code {
+    [Parameter]
+    public UserDto Friend { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<string> OnAdd { get; set; }
+}

@@ -1,0 +1,62 @@
+@if (string.IsNullOrEmpty(AvatarUrl))
+{
+    @if (MessageCount > 0 && ShowBadge)
+    {
+        <MudBadge Content="@MessageCount" Overlap="true" Color="Color.Error">
+    <MudAvatar Color="Color.Primary" id="@Id">
+        <MudIcon Icon="@Icons.Material.Filled.PersonOutline" />
+    </MudAvatar>
+</MudBadge>
+    }
+    else
+    {
+        <MudAvatar Color="Color.Primary" id="@Id">
+    <MudIcon Icon="@Icons.Material.Filled.PersonOutline" />
+</MudAvatar>
+    }
+
+}
+else if (AvatarUrl == "space")
+{
+    @if (MessageCount > 0 && ShowBadge)
+    {
+        <MudBadge Content="@MessageCount" Overlap="true" Color="Color.Error">
+    <MudAvatar Color="Color.Primary" id="@Id">
+        <MudIcon Icon="@Icons.Material.Filled.Groups" Title="Group" />
+    </MudAvatar>
+</MudBadge>
+    }
+    else
+    {
+        <MudAvatar Color="Color.Primary" id="@Id">
+    <MudIcon Icon="@Icons.Material.Filled.Groups" Title="Group" />
+</MudAvatar>
+    }
+}
+else
+{
+    @if (MessageCount > 0 && ShowBadge)
+    {
+        <MudBadge Content="@MessageCount" Overlap="true" Color="Color.Error">
+    <MudAvatar Color="Color.Primary" Image="@AvatarUrl" id="@Id"></MudAvatar>
+</MudBadge>
+    }
+    else
+    {
+        <MudAvatar Color="Color.Primary" Image="@AvatarUrl" id="@Id"></MudAvatar>
+    }
+}
+
+@code {
+    [Parameter]
+    public string AvatarUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    [Parameter]
+    public int MessageCount { get; set; }
+
+    [Parameter]
+    public bool ShowBadge { get; set; }
+}

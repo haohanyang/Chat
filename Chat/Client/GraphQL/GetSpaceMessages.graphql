@@ -1,0 +1,24 @@
+query GetSpaceMessages($spaceId: Int!) {
+  spaceMessages(spaceId: $spaceId, last: 20, order: [{ timeStamp: ASC }]) {
+    edges {
+      node {
+        id
+        author {
+          id
+          userName
+          firstName
+          lastName
+          avatar
+        }
+        content
+        timeStamp
+        attachment {
+          uri
+          blobName
+        }
+      }
+      cursor
+    }
+    totalCount
+  }
+}

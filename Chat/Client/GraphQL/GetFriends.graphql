@@ -1,0 +1,10 @@
+query GetFriends($id: String!) {
+  users(where: {id: {neq: $id}}) {
+    id
+    userName
+    firstName
+    lastName
+    bio
+    avatar
+  }
+}

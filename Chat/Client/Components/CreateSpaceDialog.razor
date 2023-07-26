@@ -1,0 +1,28 @@
+<MudDialog Class="dialog">
+    <DialogContent>
+        <MudForm @ref="_form" @bind-IsValid="@_isValid">
+            <MudTextField Required Variant="Variant.Outlined" Margin="Margin.Dense" Label="Name" @bind-Value="@_name" />
+             <MudTextField Class="mt-2" Required Variant="Variant.Outlined" Margin="Margin.Dense" Label="Description"
+             @bind-Value="@_description" />
+             <MudSelect Required MultiSelection="true" Label="Members" Placeholder="Select members"
+             @bind-SelectedValues="@_members">
+                 @{
+                    @foreach (var friend in _friends)
+                    {
+                        <MudSelectItem @key="@friend.Id" T="string" Value="@friend.Id">
+                            @friend.Name
+                        </MudSelectItem>
+                    }
+                }
+            </MudSelect>
+            @if (error != null)
+            {
+                <MudAlert Severity="Severity.Error" Class="mt-2">@error</MudAlert>
+            }
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="CreateSpace" Disabled="@_isRequesting">Create</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,0 +1,45 @@
+<div class="d-flex mt-2">
+    @if (error != null)
+    {
+        <MudAlert Severity="Severity.Error">@error</MudAlert>
+    }
+    else if (space == null && user == null)
+    {
+        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="50px" Height="50px" />
+        <div class="d-flex">
+            <MudSkeleton Width="100px" Height="15px" />
+            <MudSkeleton Width="100px" Height="15px" />
+        </div>
+    }
+    else
+    {
+        @if (user != null)
+        {
+            <Avatar AvatarUrl="@user.Avatar" />
+            <div class="ml-2">
+        <p class="chat-contact-name">@user.Name</p>
+        <p class="chat-contact-username">@@@user.UserName</p>
+    </div>
+            <div class="ml-auto d-flex">
+                <MudIconButton Icon="@Icons.Material.Filled.Info" OnClick="OpenContactDetails"></MudIconButton>
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+                    <MudMenuItem>Delete</MudMenuItem>
+                </MudMenu>
+            </div>
+        }
+        else if (space != null)
+        {
+            <Avatar AvatarUrl="space" />
+            <div class="ml-2">
+        <p class="chat-contact-name">@space.Name</p>
+        <p class="chat-contact-username">@space.Members.Count() members</p>
+    </div>
+            <div class="ml-auto d-flex">
+                <MudIconButton Icon="@Icons.Material.Filled.Info" OnClick="OpenContactDetails"></MudIconButton>
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+                    <MudMenuItem>Delete</MudMenuItem>
+                </MudMenu>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,22 @@
+query GetDirectChat($id: Int!) {
+    directChat(id: $id) {
+        id
+        updated
+        user1 {
+            id
+            userName
+            firstName
+            lastName
+            avatar
+            bio
+        }
+        user2 {
+            id
+            userName
+            firstName
+            lastName
+            avatar
+            bio
+        }
+    }
+}

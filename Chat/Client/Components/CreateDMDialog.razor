@@ -1,0 +1,16 @@
+<MudDialog Class="dialog">
+    <DialogContent>
+        <MudList Clickable="true">
+            <MudListSubheader Class="py-1">
+                Friends
+            </MudListSubheader>
+            @foreach (var friend in _friends)
+            {
+                <FriendListItem @key="@friend.Id" Friend="@friend" OnAdd="CreateDirectChat" />
+            }
+        </MudList>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

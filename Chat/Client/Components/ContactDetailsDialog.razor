@@ -1,0 +1,50 @@
+<MudDialog ContentStyle="padding: 0;" Class="dialog">
+    <DialogContent>
+        <MudCard>
+            @if (User != null)
+            {
+                <MudCardMedia Image="https://picsum.photos/seed/picsum/200/300" Height="200" />
+                <MudCardContent>
+                    <Avatar Id="contact-detail-avatar" AvatarUrl="@User.Avatar" />
+                    <MudText Typo="Typo.h5">@User.Name</MudText>
+                    <MudText Typo="Typo.body1">@@@User.UserName</MudText>
+                    <MudText Typo="Typo.body2">@User.Bio</MudText>
+                </MudCardContent>
+            }
+            else if (Space != null)
+            {
+                <MudCardMedia Image="https://picsum.photos/seed/picsum/200/300" Height="200" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h5">@Space.Name</MudText>
+                    <MudText Typo="Typo.body2">@Space.Description</MudText>
+                    <MudList>
+                        @foreach (var member in Space.Members)
+                        {
+                            <MemberListItem Member="@member" @key="@member.Id" />
+                        }
+                    </MudList>
+                </MudCardContent>
+            }
+            else
+            {
+                <h1>No thing here</h1>
+            }
+            <MudCardActions>
+                <MudButton Class="ml-auto" OnClick="Cancel">Cancel</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter]
+    public UserDto? User { get; set; }
+
+    [Parameter]
+    public SpaceDto? Space { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

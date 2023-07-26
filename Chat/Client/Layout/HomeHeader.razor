@@ -1,0 +1,63 @@
+@using Chat.Client.Components
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+<MudLink Href="/" Color="Color.Info">Chat</MudLink>
+<MudSpacer />
+<AuthorizeView>
+    <NotAuthorized>
+        @{
+            var link = Configuration.GetValue<bool>("Mock") ? "signin" : "authentication/login";
+        }
+        <MudButton Variant="Variant.Filled" Color="Color.Info" Href="@link">
+            <MudText Class="px-1">Log in</MudText>
+        </MudButton>
+    </NotAuthorized>
+    <Authorized>
+        <MudMenu>
+            <ActivatorContent>
+                <Avatar AvatarUrl="space" />
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem>@@@context.User.Claims.FirstOrDefault(e => e.Type == "extension_Username")?.Value
+                </MudMenuItem>
+                <MudDivider />
+                <MudMenuItem>Setting</MudMenuItem>
+                <MudDivider />
+                @if (Configuration.GetValue<bool>("Mock"))
+                {
+                    <MudMenuItem OnClick="MockSignOut" OnTouch="MockSignOut">Sign Out</MudMenuItem>
+
+                }
+                else
+                {
+                    <MudMenuItem OnClick="SignOut" OnTouch="SignOut">Sign Out</MudMenuItem>
+
+                }
+            </ChildContent>
+        </MudMenu>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    async Task MockSignOut()
+    {
+        try
+        {
+            var response = await Http.PostAsync("/api/v1/auth/signout", null);
+            response.EnsureSuccessStatusCode();
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+        }
+    }
+
+    void SignOut()
+    {
+        NavigationManager.NavigateToLogout("authentication/logout");
+    }
+}

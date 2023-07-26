@@ -1,0 +1,47 @@
+query GetChats($id: String!) {
+  user(id: $id) {
+    directChats1 {
+      id
+      updated
+      user1 {
+        id
+        userName
+        firstName
+        lastName
+        avatar
+      }
+      user2 {
+        id
+        userName
+        firstName
+        lastName
+        avatar
+      }
+    }
+    directChats2 {
+      id
+      updated
+      user1 {
+        id
+        userName
+        firstName
+        lastName
+        avatar
+      }
+      user2 {
+        id
+        userName
+        firstName
+        lastName
+        avatar
+      }
+    }
+    spaceMemberships {
+      space {
+        id
+        name
+        updated
+      }
+    }
+  }
+}

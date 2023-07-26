@@ -1,0 +1,40 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Chat/Client/**
+jobs:
+  build_and_deploy_job:
+    name: Build and Deploy Job
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build web artifacts
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: "npm"
+    - name: Build web artifacts for blazor wasm
+      run: |
+        npm ci
+        npm run mock
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Publish
+      run: dotnet publish Chat/Client/Chat.Client.csproj -c Release -o release
+    - name: Deploy to Netlify
+      uses: netlify/actions/cli@master
+      with:
+        args: deploy --dir=release/wwwroot --prod
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

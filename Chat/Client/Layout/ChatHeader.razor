@@ -1,0 +1,88 @@
+@using Chat.Client.Components
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject IDialogService DialogService
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+
+<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+    OnClick="@(e => DrawerToggle.InvokeAsync())" />
+<MudSpacer />
+
+<AuthorizeView>
+    <Authorized>
+        <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Inherit">
+            <MudMenuItem Icon="@Icons.Material.Filled.Message" Color="Color.Inherit" OnClick="OpenCreateDMDialog"
+                OnTouch="OpenCreateDMDialog">Direct
+                Message
+            </MudMenuItem>
+            <MudMenuItem Icon="@Icons.Material.Filled.GroupAdd" OnClick="OpenCreateSpaceDialog"
+                OnTouch="OpenCreateSpaceDialog">Create a Space
+            </MudMenuItem>
+            <MudMenuItem Icon="@Icons.Material.Filled.Groups">Browse a Spaces</MudMenuItem>
+        </MudMenu>
+        <MudMenu Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit">
+        </MudMenu>
+        <MudMenu>
+            <ActivatorContent>
+                @{
+                    var avatar = context.User.Claims.FirstOrDefault(c => c.Type == "avatar")?.Value;
+                    <Avatar AvatarUrl="@avatar" />
+                }
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem>@@@context.User.Claims.FirstOrDefault(e => e.Type == "extension_Username")?.Value
+                </MudMenuItem>
+                <MudDivider />
+                <MudMenuItem>Setting</MudMenuItem>
+                <MudDivider />
+                @if (Configuration.GetValue<bool>("Mock"))
+                {
+                    <MudMenuItem OnClick="MockSignOut" OnTouch="MockSignOut">Sign out</MudMenuItem>
+                }
+                else
+                {
+                    <MudMenuItem OnClick="SignOut" OnTouch="SignOut">Sign out</MudMenuItem>
+                }
+            </ChildContent>
+        </MudMenu>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [Parameter]
+    public EventCallback DrawerToggle { get; set; }
+
+    private void OpenCreateDMDialog()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, CloseOnEscapeKey = true };
+        DialogService.Show<CreateDMDialog>("Send a Direct Message", options);
+    }
+
+    private void OpenCreateSpaceDialog()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, CloseOnEscapeKey = true };
+        DialogService.Show<CreateSpaceDialog>("Create a Space", options);
+    }
+
+    async Task MockSignOut()
+    {
+        try
+        {
+            var response = await Http.PostAsync("/api/v1/auth/signout", null);
+            response.EnsureSuccessStatusCode();
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+        }
+    }
+
+    void SignOut()
+    {
+        NavigationManager.NavigateToLogout("authentication/logout");
+    }
+}

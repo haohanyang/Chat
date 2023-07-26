@@ -1,0 +1,47 @@
+name: Publish to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Chat/**
+
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: './release'
+  DOTNET_VERSION: '7.0.x'
+
+jobs:
+  build_and_deploy_job:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@main
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }} 
+      - name: Set up node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "npm"
+      - name: Build wwwroot artifacts and settings for client app
+        run: |
+          npm ci
+          npm run build
+        env:
+            AZADB2C_AUTHORITY: ${{ secrets.AZADB2C_AUTHORITY }}
+            AZADB2C_CLIENTID: ${{ secrets.AZADB2C_CLIENTID }}
+            SCOPE_URI: ${{ secrets.SCOPE_URI }}
+      - name: dotnet build and publish
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish Chat/Server/Chat.Server.csproj -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH}}

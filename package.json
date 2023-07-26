@@ -1,0 +1,25 @@
+{
+  "name": "chat-mock-server",
+  "version": "0.5.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && vite build",
+    "mock": "tsc && NODE_ENV=mock vite build",
+    "clean": "rm -rf ./Chat/Client/wwwroot"
+  },
+  "author": "Haohan Yang",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "moment": "^2.29.4",
+    "msw": "^1.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9"
+  },
+  "msw": {
+    "workerDirectory": "Chat/Client/web/public"
+  }
+}

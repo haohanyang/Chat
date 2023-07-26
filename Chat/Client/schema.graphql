@@ -1,0 +1,508 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type User {
+  id: String!
+  userName: String!
+  firstName: String!
+  lastName: String!
+  avatar: String!
+  bio: String!
+  directChats1: [DirectChat!]!
+  directChats2: [DirectChat!]!
+  spaceMemberships: [SpaceMembership!]!
+}
+
+type SpaceMessageAttachment {
+  uri: String
+  spaceMessageId: Int!
+  spaceMessage: SpaceMessage!
+  id: Int!
+  uploader: User!
+  uploaderId: String!
+  fileName: String!
+  containerName: String!
+  blobName: String!
+  size: Long!
+  contentType: String!
+  timeStamp: DateTime!
+}
+
+type DirectMessageAttachment {
+  uri: String
+  directMessageId: Int!
+  directMessage: DirectMessage!
+  id: Int!
+  uploader: User!
+  uploaderId: String!
+  fileName: String!
+  containerName: String!
+  blobName: String!
+  size: Long!
+  contentType: String!
+  timeStamp: DateTime!
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+  VALIDATION
+}
+
+type Query {
+  users(where: UserFilterInput): [User!]!
+  user(id: String! where: UserFilterInput): User
+  directChat(id: Int! where: DirectChatFilterInput): DirectChat
+  space(id: Int! where: SpaceFilterInput): Space
+  spaceMessages(spaceId: Int! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: SpaceMessageFilterInput order: [SpaceMessageSortInput!]): SpaceMessagesConnection
+  directMessages(chatId: Int! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: DirectMessageFilterInput order: [DirectMessageSortInput!]): DirectMessagesConnection
+}
+
+type Mutation {
+  addDirectChat(input: AddDirectChatInput!): AddDirectChatPayload!
+  addSpace(input: AddSpaceInput!): AddSpacePayload!
+}
+
+type DirectChat {
+  id: Int!
+  user1Id: String!
+  user1: User!
+  user2Id: String!
+  user2: User!
+  created: DateTime!
+  updated: DateTime!
+  messages: [DirectMessage!]!
+}
+
+type SpaceMembership {
+  id: Int!
+  memberId: String!
+  member: User!
+  spaceId: Int!
+  space: Space!
+  timeStamp: DateTime!
+  isOwner: Boolean!
+}
+
+type SpaceMessage {
+  id: Int!
+  content: String!
+  authorId: String!
+  author: User!
+  spaceId: Int!
+  space: Space!
+  timeStamp: DateTime!
+  attachment: SpaceMessageAttachment
+}
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type DirectMessage {
+  id: Int!
+  content: String!
+  authorId: String!
+  author: User!
+  directChatId: Int!
+  directChat: DirectChat!
+  timeStamp: DateTime!
+  attachment: DirectMessageAttachment
+}
+
+input UserFilterInput {
+  and: [UserFilterInput!]
+  or: [UserFilterInput!]
+  id: StringOperationFilterInput
+  userName: StringOperationFilterInput
+  email: StringOperationFilterInput
+  firstName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  avatar: StringOperationFilterInput
+  bio: StringOperationFilterInput
+  directChats1: ListFilterInputTypeOfDirectChatFilterInput
+  directChats2: ListFilterInputTypeOfDirectChatFilterInput
+  spaceMemberships: ListFilterInputTypeOfSpaceMembershipFilterInput
+  spaceMessages: ListFilterInputTypeOfSpaceMessageFilterInput
+  directMessages: ListFilterInputTypeOfDirectMessageFilterInput
+  directMessageAttachments: ListFilterInputTypeOfDirectMessageAttachmentFilterInput
+  spaceMessageAttachments: ListFilterInputTypeOfSpaceMessageAttachmentFilterInput
+}
+
+input DirectChatFilterInput {
+  and: [DirectChatFilterInput!]
+  or: [DirectChatFilterInput!]
+  id: IntOperationFilterInput
+  user1Id: StringOperationFilterInput
+  user1: UserFilterInput
+  user2Id: StringOperationFilterInput
+  user2: UserFilterInput
+  created: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+  messages: ListFilterInputTypeOfDirectMessageFilterInput
+}
+
+input SpaceFilterInput {
+  and: [SpaceFilterInput!]
+  or: [SpaceFilterInput!]
+  id: IntOperationFilterInput
+  name: StringOperationFilterInput
+  description: StringOperationFilterInput
+  memberships: ListFilterInputTypeOfSpaceMembershipFilterInput
+  messages: ListFilterInputTypeOfSpaceMessageFilterInput
+  created: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+}
+
+input SpaceMessageFilterInput {
+  and: [SpaceMessageFilterInput!]
+  or: [SpaceMessageFilterInput!]
+  id: IntOperationFilterInput
+  content: StringOperationFilterInput
+  authorId: StringOperationFilterInput
+  author: UserFilterInput
+  spaceId: IntOperationFilterInput
+  space: SpaceFilterInput
+  timeStamp: DateTimeOperationFilterInput
+  attachment: SpaceMessageAttachmentFilterInput
+}
+
+input SpaceMessageSortInput {
+  id: SortEnumType
+  content: SortEnumType
+  authorId: SortEnumType
+  author: UserSortInput
+  spaceId: SortEnumType
+  space: SpaceSortInput
+  timeStamp: SortEnumType
+  attachment: SpaceMessageAttachmentSortInput
+}
+
+input DirectMessageFilterInput {
+  and: [DirectMessageFilterInput!]
+  or: [DirectMessageFilterInput!]
+  id: IntOperationFilterInput
+  content: StringOperationFilterInput
+  authorId: StringOperationFilterInput
+  author: UserFilterInput
+  directChatId: IntOperationFilterInput
+  directChat: DirectChatFilterInput
+  timeStamp: DateTimeOperationFilterInput
+  attachment: DirectMessageAttachmentFilterInput
+}
+
+input DirectMessageSortInput {
+  id: SortEnumType
+  content: SortEnumType
+  authorId: SortEnumType
+  author: UserSortInput
+  directChatId: SortEnumType
+  directChat: DirectChatSortInput
+  timeStamp: SortEnumType
+  attachment: DirectMessageAttachmentSortInput
+}
+
+"A connection to a list of items."
+type SpaceMessagesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SpaceMessagesEdge!]
+  "A flattened list of the nodes."
+  nodes: [SpaceMessage!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"A connection to a list of items."
+type DirectMessagesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [DirectMessagesEdge!]
+  "A flattened list of the nodes."
+  nodes: [DirectMessage!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input ListFilterInputTypeOfDirectChatFilterInput {
+  all: DirectChatFilterInput
+  none: DirectChatFilterInput
+  some: DirectChatFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfSpaceMembershipFilterInput {
+  all: SpaceMembershipFilterInput
+  none: SpaceMembershipFilterInput
+  some: SpaceMembershipFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfSpaceMessageFilterInput {
+  all: SpaceMessageFilterInput
+  none: SpaceMessageFilterInput
+  some: SpaceMessageFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfDirectMessageFilterInput {
+  all: DirectMessageFilterInput
+  none: DirectMessageFilterInput
+  some: DirectMessageFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfDirectMessageAttachmentFilterInput {
+  all: DirectMessageAttachmentFilterInput
+  none: DirectMessageAttachmentFilterInput
+  some: DirectMessageAttachmentFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfSpaceMessageAttachmentFilterInput {
+  all: SpaceMessageAttachmentFilterInput
+  none: SpaceMessageAttachmentFilterInput
+  some: SpaceMessageAttachmentFilterInput
+  any: Boolean
+}
+
+input IntOperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime]
+  nin: [DateTime]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input SpaceMessageAttachmentFilterInput {
+  and: [SpaceMessageAttachmentFilterInput!]
+  or: [SpaceMessageAttachmentFilterInput!]
+  spaceMessageId: IntOperationFilterInput
+  spaceMessage: SpaceMessageFilterInput
+  id: IntOperationFilterInput
+  uploader: UserFilterInput
+  uploaderId: StringOperationFilterInput
+  fileName: StringOperationFilterInput
+  containerName: StringOperationFilterInput
+  blobName: StringOperationFilterInput
+  size: LongOperationFilterInput
+  contentType: StringOperationFilterInput
+  timeStamp: DateTimeOperationFilterInput
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+input UserSortInput {
+  id: SortEnumType
+  userName: SortEnumType
+  email: SortEnumType
+  firstName: SortEnumType
+  lastName: SortEnumType
+  avatar: SortEnumType
+  bio: SortEnumType
+}
+
+input SpaceSortInput {
+  id: SortEnumType
+  name: SortEnumType
+  description: SortEnumType
+  created: SortEnumType
+  updated: SortEnumType
+}
+
+input SpaceMessageAttachmentSortInput {
+  spaceMessageId: SortEnumType
+  spaceMessage: SpaceMessageSortInput
+  id: SortEnumType
+  uploader: UserSortInput
+  uploaderId: SortEnumType
+  fileName: SortEnumType
+  containerName: SortEnumType
+  blobName: SortEnumType
+  size: SortEnumType
+  contentType: SortEnumType
+  timeStamp: SortEnumType
+}
+
+input DirectMessageAttachmentFilterInput {
+  and: [DirectMessageAttachmentFilterInput!]
+  or: [DirectMessageAttachmentFilterInput!]
+  directMessageId: IntOperationFilterInput
+  directMessage: DirectMessageFilterInput
+  id: IntOperationFilterInput
+  uploader: UserFilterInput
+  uploaderId: StringOperationFilterInput
+  fileName: StringOperationFilterInput
+  containerName: StringOperationFilterInput
+  blobName: StringOperationFilterInput
+  size: LongOperationFilterInput
+  contentType: StringOperationFilterInput
+  timeStamp: DateTimeOperationFilterInput
+}
+
+input DirectChatSortInput {
+  id: SortEnumType
+  user1Id: SortEnumType
+  user1: UserSortInput
+  user2Id: SortEnumType
+  user2: UserSortInput
+  created: SortEnumType
+  updated: SortEnumType
+}
+
+input DirectMessageAttachmentSortInput {
+  directMessageId: SortEnumType
+  directMessage: DirectMessageSortInput
+  id: SortEnumType
+  uploader: UserSortInput
+  uploaderId: SortEnumType
+  fileName: SortEnumType
+  containerName: SortEnumType
+  blobName: SortEnumType
+  size: SortEnumType
+  contentType: SortEnumType
+  timeStamp: SortEnumType
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+"An edge in a connection."
+type SpaceMessagesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SpaceMessage!
+}
+
+"An edge in a connection."
+type DirectMessagesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: DirectMessage!
+}
+
+input SpaceMembershipFilterInput {
+  and: [SpaceMembershipFilterInput!]
+  or: [SpaceMembershipFilterInput!]
+  id: IntOperationFilterInput
+  memberId: StringOperationFilterInput
+  member: UserFilterInput
+  spaceId: IntOperationFilterInput
+  space: SpaceFilterInput
+  timeStamp: DateTimeOperationFilterInput
+  isOwner: BooleanOperationFilterInput
+}
+
+input LongOperationFilterInput {
+  eq: Long
+  neq: Long
+  in: [Long]
+  nin: [Long]
+  gt: Long
+  ngt: Long
+  gte: Long
+  ngte: Long
+  lt: Long
+  nlt: Long
+  lte: Long
+  nlte: Long
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input SpaceRequestInput {
+  name: String!
+  description: String!
+  members: [String!]!
+}
+
+input DirectChatRequestInput {
+  user1Id: String!
+  user2Id: String!
+}
+
+type Space {
+  id: Int!
+  name: String!
+  description: String!
+  memberships: [SpaceMembership!]!
+  messages: [SpaceMessage!]!
+  created: DateTime!
+  updated: DateTime!
+}
+
+input AddDirectChatInput {
+  request: DirectChatRequestInput!
+}
+
+type AddDirectChatPayload {
+  directChat: DirectChat
+}
+
+input AddSpaceInput {
+  request: SpaceRequestInput!
+}
+
+type AddSpacePayload {
+  space: Space
+}

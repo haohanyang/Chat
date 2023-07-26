@@ -1,0 +1,16 @@
+﻿@page "/"
+@layout HomeLayout
+@inject HttpClient Http
+@inject IWebAssemblyHostEnvironment HostEnvironment
+@inject GraphQLClient GraphQLClient
+<PageTitle>Home</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <MudAlert Severity="Severity.Info">You are not logged in</MudAlert>
+    </NotAuthorized>
+    <Authorized>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/chat">Go to chat</MudButton>
+    </Authorized>
+</AuthorizeView>
+

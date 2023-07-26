@@ -1,0 +1,46 @@
+@page "/signin"
+
+<MudContainer Class="auth-container" MaxWidth="MaxWidth.Medium">
+    <EditForm Model="@formModel" OnValidSubmit="Login">
+        <DataAnnotationsValidator />
+        <MudCard>
+            <MudCardContent>
+                <MudText Class="auth-form-title" Typo="Typo.h5">Sign in</MudText>
+                <MudTextField @bind-Value="formModel.UserName" For="@(() => formModel.UserName)" Label="Username"
+                    Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-5">
+                </MudTextField>
+                <MudTextField @bind-Value="formModel.Password" For="@(() => formModel.Password)" Label="Password"
+                    Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-5">
+                </MudTextField>
+                @if (Configuration.GetValue<bool>("Mock") && showMockInfo)
+                {
+                    <MudAlert Severity="Severity.Info" Class="mt-2" ShowCloseIcon="true" CloseIconClicked="CloseInfo">
+                        This is a mock login page. Use username "test" and password "test" to login.
+                    </MudAlert>
+                }
+            </MudCardContent>
+            <MudCardActions Class="mx-2 pb-4">
+                <MudButton Class="mr-auto" Variant="Variant.Filled" Href="/signup">
+                    <MudText Variant="Variant.Filled">Register</MudText>
+                </MudButton>
+                <MudButton Class="ml-auto" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit"
+                    Disabled="@isRequesting">
+                    <MudText Variant="Variant.Filled" Class="px-1">Sign in</MudText>
+                </MudButton>
+            </MudCardActions>
+            @if (error != null)
+            {
+                <MudAlert Severity="Severity.Error" Class="mt-4">
+                    Error
+                </MudAlert>
+            }
+            @if (success)
+            {
+                <MudAlert Severity="Severity.Success" Class="mt-4">
+                    Signin succeeded. Redirecting to chat page...
+                </MudAlert>
+            }
+        </MudCard>
+    </EditForm>
+</MudContainer>
+

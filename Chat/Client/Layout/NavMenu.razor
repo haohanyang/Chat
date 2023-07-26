@@ -1,0 +1,38 @@
+﻿@using Chat.Client.Components
+@inject StateContainer StateContainer
+@implements IDisposable
+
+<MudNavMenu>
+    <MudDivider />
+    <MudNavGroup Title="Messages" Icon="@Icons.Material.Filled.Message" Expanded="true">
+        @if (StateContainer.ContactError != null)
+        {
+            <MudAlert Severity="Severity.Error">@StateContainer.ContactError</MudAlert>
+        }
+        else if (StateContainer.Contacts == null)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
+        else
+        {
+            foreach (var contact in StateContainer.Contacts)
+            {
+                <ContactNavItem @key="@contact.Key" Data="@contact" DrawerOpen="@DrawerOpen" />
+            }
+        }
+    </MudNavGroup>
+</MudNavMenu>
+
+@code {
+    [Parameter]
+    public bool DrawerOpen { get; set; }
+    protected override void OnInitialized()
+    {
+        StateContainer.NavOnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateContainer.NavOnChange -= StateHasChanged;
+    }
+}

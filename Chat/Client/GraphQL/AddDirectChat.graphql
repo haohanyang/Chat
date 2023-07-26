@@ -1,0 +1,27 @@
+mutation AddDirectChat($user1Id: String!, $user2Id: String!) {
+    addDirectChat(input: {
+        request: {
+            user1Id: $user1Id,
+            user2Id: $user2Id
+        }
+    }) {
+        directChat {
+            id
+            updated
+            user1 {
+                id
+                userName
+                firstName
+                lastName
+                avatar
+            }
+            user2 {
+                id
+                userName
+                firstName
+                lastName
+                avatar
+            }
+        }
+    }
+}

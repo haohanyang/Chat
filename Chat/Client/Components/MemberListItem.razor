@@ -1,0 +1,15 @@
+<div class="mud-list-item px-0 mud-list-item-gutters mud-list-item-clickable mud-ripple">
+    <div class="mud-list-item-icon">
+        <Avatar AvatarUrl="@Member.Avatar" />
+    </div>
+    <div class="mud-list-item-text">
+        <p>@Member.Name</p>
+        <p>@@@Member.UserName</p>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public UserDto Member { get; set; } = null!;
+}

@@ -1,0 +1,40 @@
+@page "/chat/{type?}/{id?}"
+@implements IAsyncDisposable
+@using Chat.Client.Components
+
+
+<PageTitle>Chat</PageTitle>
+
+@if (_error != null)
+{
+    <MudAlert Severity="Severity.Error">@_error</MudAlert>
+}
+else if (_messages != null)
+{
+    <ContactStatus ChatId="@_id" Type="@_type" UserId="@_userId" />
+    <MudDivider />
+    <MessageList Messages="@_messages" />
+    <div class="d-flex">
+    @if (_fileUploadResult != null)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="CancelFile">
+            </MudIconButton>
+        }
+        else
+        {
+            <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadFiles">
+                <ButtonTemplate>
+                    <MudIconButton HtmlTag="label" Color="Color.Primary" Icon="@Icons.Material.Filled.AttachFile"
+                        for="@context" />
+                </ButtonTemplate>
+            </MudFileUpload>
+        }
+
+        <MudTextField @bind-Value="@TextInput" Label="Chat" Variant="Variant.Outlined"></MudTextField>
+        <MudIconButton Class="my-1" OnClick="SendMessage" Icon="@Icons.Material.Filled.Send" Color="Color.Primary" />
+    </div>
+}
+else if (_loading)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" Class="ml-auto mr-auto mt-5" />
+}

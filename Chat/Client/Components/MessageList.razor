@@ -1,0 +1,12 @@
+<MudList Class="mt-2 message-list">
+    @foreach (var message in Messages)
+    {
+        <Message @key="@message.Id" Data="@message" />
+    }
+    </MudList>
+
+    @code {
+    [Parameter]
+    public List<MessageDto> Messages { get; set; } = null!;
+
+}
