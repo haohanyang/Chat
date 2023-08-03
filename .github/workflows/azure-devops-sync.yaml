@@ -1,0 +1,25 @@
+name: Synchronize GitHub with Azure DevOps Repos
+
+on:
+  push:
+    tags-ignore:
+      - '*'
+    branches:
+      - '*'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Sync up to Azure DevOps
+        run: |
+            git config --global credential.helper store
+            git config --global credential.UseHttpPath true
+            git remote add sync $AZDEVOPS_REPO
+            git push sync --mirror
+        env:
+            AZDEVOPS_REPO: "https://${{ secrets.AZDEVOPS_USERNAME }}:${{ secrets.AZDEVOPS_PAT }}@dev.azure.com/yanghaohan/Chat/_git/Chat"
